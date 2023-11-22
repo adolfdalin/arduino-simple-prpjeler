@@ -1,0 +1,72 @@
+const int motorEN = 6;
+const int motorIN1 = 4;
+const int motorIN2 = 5;
+
+const int trigPin = 2;
+const int echoPin = 3;
+
+const int buzzerPin = 13;
+
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(buzzerPin, OUTPUT);
+  pinMode(motorEN, OUTPUT);
+  pinMode(motorIN1, OUTPUT);
+  pinMode(motorIN2, OUTPUT);
+
+Serial.begin(9600);
+
+}
+
+void loop()
+{
+   // motorHareket(true, 500);
+
+  long sure, mesafe;
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  sure = pulseIn(echoPin, HIGH);
+  mesafe = (sure / 2) / 29.1;
+  digitalWrite(4, HIGH);
+  digitalWrite(5, LOW);
+
+if(mesafe<100)
+{
+      tone(buzzerPin, 2000);
+    delay(mesafe*3);
+      noTone(buzzerPin);
+    delay(mesafe*3); 
+  motorHareket(true, 50);
+  
+}
+
+if (mesafe<10)
+{
+      noTone(buzzerPin);
+    motorHareketDur();
+
+
+}
+  Serial.print(mesafe);
+  Serial.println(" cm");
+  delay(500);
+
+}
+
+  void motorHareket(bool ileri, int hiz) {
+    digitalWrite(motorIN1, ileri ? HIGH : LOW);
+    digitalWrite(motorIN2, ileri ? LOW : HIGH);
+    analogWrite(motorEN, hiz);
+  }
+
+  void motorHareketDur() {
+    digitalWrite(motorIN1, LOW);
+    digitalWrite(motorIN2, LOW);
+    analogWrite(motorEN, 0);
+  }
+
